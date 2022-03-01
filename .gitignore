@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+
+# latex
+*.aux
+*.log
+*.gz
