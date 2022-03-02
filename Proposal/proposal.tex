@@ -289,6 +289,12 @@
 % use a multiple column layout for up to three different
 % affiliations
 \author{
+\IEEEauthorblockN{Xiang Yue}
+\IEEEauthorblockA{School of Computer Science\\
+Carnegie Mellon University\\
+Pittsburgh, Pennsylvania 15213\\
+Email: ***@andrew.cmu.edu}
+\and
 \IEEEauthorblockN{Xuan Peng}
 \IEEEauthorblockA{Information Networking Institute\\
 Carnegie Mellon University\\
@@ -300,13 +306,8 @@ Email: xuanpeng@andrew.cmu.edu}
 Carnegie Mellon University\\
 Pittsburgh, Pennsylvania 15213\\
 Email: zeyuwang@cmu.edu}
-\and
-\IEEEauthorblockN{Xiang Yue}
-\IEEEauthorblockA{School of Computer Science\\
-Carnegie Mellon University\\
-Pittsburgh, Pennsylvania 15213\\
-Email: ***@andrew.cmu.edu}
 }
+
 
 % conference papers do not typically use \thanks and this command
 % is locked out in conference mode. If really needed, such as for
@@ -486,12 +487,46 @@ Subsubsection text here.
 
 
 \section{Methodology}
-The conclusion goes here.
+\subsection{Resource Throttling Techniques}
+cgroup
+
+\subsection{System Measurement}
+
+\subsection{Evaluation}
+
+\subsection{Resource}
 
 
 
 \section{Goals}
-The conclusion goes here.
+The overall goal is to finish implementing Aridac, testing it under various kinds of workload scenarios, measuring how much improvement we achieve, and finally, analyzing the overhead brought by Aridac and discussing the trade-offs.\\
+
+To evaluate Aridac, we could start from the following perspectives:
+\begin{itemize}
+  \item The completeness of implementation. i.e., whether the isolator can be applied to the resource contention scenario that we mentioned before.
+  \item To what extent does Aridac help. i.e., how much peak \& average disk throughput improvement can we gain with Aridac.
+  \item What's the price we need to pay? i.e., how many extra machine resource will be consumed by Aridac.
+\end{itemize}
+
+
+Here, we set 3 concrete goals in terms of the final progress, which represent 75\%, 100\%, and 125\% degree of completion, respectively.\\
+
+For the 75\% completion goal, our aim is to cover the following aspects:
+\begin{itemize}
+  \item Finish implementing Aridac, the adaptive disk resource isolator.
+  \item Make sure that Aridac could run successfully without crashing or bugs.
+  \item Aridac achieve a better disk I/O throughput than the non-optimized version.
+\end{itemize}
+
+For the 100\% completion goal, we will strive to finely tune the isolation policy in order to achieve an optimal resource sharing among containers, which will be gauged by overall throughput of the system. We will use the following steps to check whether Aridac has achieved this goal:
+\begin{itemize}
+  \item A set of tests carrying different workload will be designed to simulate typical resource sharing situations in real-world datacenter containerized environment.
+  \item Aridac must excel in all test cases that we designed.
+  \item Concrete benchmark data will be given, specifying by how much Aridac is leading in terms of system I/O throughput.
+\end{itemize}
+
+Beyond the 100\% goal, if everything goes well, we will further develop a fuzzy disk I/O workload generator, so that all possible real-life cases will be covered, incluing assorted corner cases and rare cases. Our anticipation for this 125\% goal is that Aridac could survive through this fuzzy test. We will also carry out benchmarking, and do some statistical work to show how well Aridac could be in a totally random environment.
+
 
 
 % conference papers do not normally have an appendix
@@ -549,9 +584,8 @@ Here are some questions that our experiments will answer:
 % (used to reserve space for the reference number labels box)
 \begin{thebibliography}{1}
 
-\bibitem{IEEEhowto:kopka}
-H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
-  0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
+\bibitem{}
+Improving I/O Resource Sharing of Linux Cgroup for NVMe SSDs on Multi-core Systems, Sungyong Ahn, and Kwanghyun La and Jihong Kim, HotStorage, 2016
 
 \end{thebibliography}
 
