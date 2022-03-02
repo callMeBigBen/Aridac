@@ -487,16 +487,14 @@ Subsubsection text here.
 
 
 \section{Methodology}
-\subsection{Resource Throttling Techniques}
-cgroup
-
-\subsection{System Measurement}
-
 \subsection{Evaluation}
+Supposedly, to evaluate the effectiveness of Aridac, we will carry out benchmark experiments under different kinds of workload. Most experiment setttings will be invariants, including the host machine (physical machine), container software, container version, testing programs, etc. The only variant is the isolation policy. One setting will use Aridac, while the other one simply does not use any.
 
-\subsection{Resource}
+\subsection{System Measurement Metrics}
 
+\textbf{The detailed discussion of the metrics selection is still ongoing and will be posted here soon.} This is the very essential component of our project, and it is also a very difficult part, for which we need to be very careful and take many aspects into consideration. So we choose to post a placeholder here, instead of rushing with some metrics that are not good enough.\\
 
+In general, we want the metrics to be correct, precise, and able to take the semantics of different I/O operations into consideration. For example, between the extremely heavy disk write operations introduced by image pulling during deployment in one container, and moderately heavy disk write operation from a critical web service in the other container, we definitely want Aridac to catch difference among those operations, whether through some OS observability methods or manually injected configurations. It's fair to say that this metrics will determine the effectiveness of Aridac.
 
 \section{Goals}
 The overall goal is to finish implementing Aridac, testing it under various kinds of workload scenarios, measuring how much improvement we achieve, and finally, analyzing the overhead brought by Aridac and discussing the trade-offs.\\
