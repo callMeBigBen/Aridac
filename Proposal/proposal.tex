@@ -495,7 +495,7 @@ The overall goal is to finish implementing Aridac, testing it under various kind
 To evaluate Aridac, we could start from the following perspectives:
 \begin{itemize}
   \item The completeness of implementation. i.e., whether the isolator can be applied to the resource contention scenario that we mentioned before.
-  \item To what extent does Aridac help. i.e., how much peak \& average disk throughput improvement can we gain with Aridac.
+  \item To what extent does Aridac help. i.e., how much peak \& average system metrics improvement can we gain with Aridac.
   \item What's the price we need to pay? i.e., how many extra machine resource will be consumed by Aridac.
 \end{itemize}
 
@@ -506,14 +506,14 @@ For the 75\% completion goal, our aim is to cover the following aspects:
 \begin{itemize}
   \item Finish implementing Aridac, the adaptive disk resource isolator.
   \item Make sure that Aridac could run successfully without crashing or bugs.
-  \item Aridac achieve a better disk I/O throughput than the non-optimized version.
+  \item Aridac achieve a better system metrics than the non-optimized version.
 \end{itemize}
 
-For the 100\% completion goal, we will strive to finely tune the isolation policy in order to achieve an optimal resource sharing among containers, which will be gauged by overall throughput of the system. We will use the following steps to check whether Aridac has achieved this goal:
+For the 100\% completion goal, we will strive to finely tune the isolation policy in order to achieve an optimal resource sharing among containers, which will be gauged by overall system metrics of the system. We will use the following steps to check whether Aridac has achieved this goal:
 \begin{itemize}
   \item A set of tests carrying different workload will be designed to simulate typical resource sharing situations in real-world datacenter containerized environment.
   \item Aridac must excel in all test cases that we designed.
-  \item Concrete benchmark data will be given, specifying by how much Aridac is leading in terms of system I/O throughput.
+  \item Concrete benchmark data will be given, specifying by how much Aridac is leading in terms of system metrics.
 \end{itemize}
 
 Beyond the 100\% goal, if everything goes well, we will further develop a fuzzy disk I/O workload generator, so that all possible real-life cases will be covered, incluing assorted corner cases and rare cases. Our anticipation for this 125\% goal is that Aridac could survive through this fuzzy test. We will also carry out benchmarking, and do some statistical work to show how well Aridac could be in a totally random environment.
