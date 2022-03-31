@@ -44,6 +44,7 @@
   % IEEE Computer Society needs nocompress option
   % requires cite.sty v4.0 or later (November 2003)
   \usepackage[nocompress]{cite}
+  \usepackage{amsmath}
 \else
   % normal IEEE
   \usepackage{cite}
@@ -282,7 +283,7 @@
 % not capitalized unless they are the first or last word of the title.
 % Linebreaks \\ can be used within to get better formatting as desired.
 % Do not put math or special symbols in the title.
-\title{Aridac: Adaptive Resource Isolation of Non-volatile Devices Under Heterogeneous Containerized Environment}
+\title{Aridac: Adaptive Resource Isolation of Non-volatile Devices \\Under Heterogeneous Containerized Environment \\ Project Interim Report}
 
 
 % author names and affiliations
@@ -379,7 +380,12 @@ Although there are already some tools (cgroup, trickle) for adjusting resource q
 
 We plan to propose the Aridac, an Adaptive Resource Isolation algorithm of Non-volatile Devices under heterogeneous containerized environment. The basic idea is to monitor, collect and analyze the resource usage habit of containers as time goes on, and allocate their resources to ensure fairness under certain rules. The quota of disk I/O can be allocated by, for instance, the priority of the application, or by containers' history maximum usage. And the objective is to achieve fairness. Besides the algorithm, we plan to design the testing workloads and design experiments for comparing fairness between different policies with specific metrics. Also, we will provide the corresponding benchmark data for further research. To narrow down the scope, we focus on disk isolation, which can be extended to the network I/O or other resources allocation scenario. The basic tools of system design and experiments include cgroup, bash scripts.\\
 
-The rest of the proposal is organized as follows: Methodology section shows how we will define the effectiveness of Aridac; Goals includes our promising results of research; Final paper plan illustrates how we will write the final paper. \\
+The rest of the proposal is organized as follows: Related Work section shows the relevant works of disk I/O isolation; Methodology section shows how we will define the effectiveness of Aridac; Goals includes our promising results of research; Final paper plan illustrates how we will write the final paper. \\
+
+\section{Related Works}
+Currently, there are not so many efforts on research of container isolation, especially on disk I/O. However, some researchers interested in disk I/O isolation has some works for us to refer. Merchant et al. \cite{Merchant2011MaestroQI} focused on the fairness and performance of disk I/O allocation for different applications. He hypothesized there are different performance targets (throughput or I/O directed) for each application, and developed a policy to allocate the resources to them to reach the best overall performance. Arunagiri et al.\cite{Arunagiri2011FAIRIOAA} developed the FAIRIO algorithm to schedule prorated I/O resources for fair allocation, which is a more general solution. Li et al.\cite{Li2015ASCARAC} provided an automatic framework to monitor storage contention and optimize bandwidth utilization. In addtion, for the different scenario on solid state disks, Jo et al.\cite{Jo2017DynamicLB} discussed the specific solution to it.\\
+
+The above ideas give us a good inspiration for container disk I/O isolation. A naive idea is to treat containers as applications and apply the above solutions. However, different from applications, containers' behaviors are more complicated. In this paper, we believe each container has a dynamic usage pattern and is variable from period to period. Therefore, adjusting the policy to allocate resources cannot be avoided.\\
 
 
 % An example of a floating figure using the graphicx package.
@@ -491,9 +497,28 @@ The functionality evaluation will validate the basic functionality of our implem
 
 \subsection{System Measurement Metrics}
 
-\textbf{The detailed discussion of the metrics selection is still ongoing and will be posted here soon.} This is the very essential component of our project, and it is also a very difficult part, for which we need to be very careful and take many aspects into consideration. So we choose to post a placeholder here, instead of rushing with some metrics that are not good enough.\\
+In general, we want the metrics to be correct, precise, and able to take the semantics of different I/O operations into consideration. For example, between the extremely heavy disk write operations introduced by image pulling during deployment in one container, and moderately heavy disk write operation from a critical web service in the other container, we definitely want Aridac to catch difference among those operations, whether through some OS observability methods or manually injected configurations. It's fair to say that this metrics will determine the effectiveness of Aridac.\\
 
-In general, we want the metrics to be correct, precise, and able to take the semantics of different I/O operations into consideration. For example, between the extremely heavy disk write operations introduced by image pulling during deployment in one container, and moderately heavy disk write operation from a critical web service in the other container, we definitely want Aridac to catch difference among those operations, whether through some OS observability methods or manually injected configurations. It's fair to say that this metrics will determine the effectiveness of Aridac.
+Since the behavior patterns of containers are changing from time to time, we keep monitoring their patterns and divided each one at any moment into two types of container - throughput directed or I/O directed, and allocate resources to them based on the type. Their types are decided by sampling the resource usage by a fixed interval.\\
+
+For the metric, whatever type the container is, we manage to satisfy their required target. So their performance metric $y_i$ for $i$-th container $c_i$ in period $t$ is formulated as follows:\\
+\[
+  y_i(t) = 
+  \begin{cases} 
+    \frac{\textnormal{throughput}_i(t)}{\textnormal{throughput target}_i} & c_i \textnormal{ is throughput directed}  \\
+    \frac{\textnormal{latency target}_i}{\textnormal{latency}_i(t)} & c_i \textnormal{ is I/O directed}
+  \end{cases}
+\]
+\\
+
+Using this performance metrics, we unify the resources requirements of containers and the extent that they are satisfied. Then we can derive our overall performance $\textbf{y}$ at time $t$ (assume there are $N$ containers):\\
+
+
+\[
+  \textbf{y}(t) = \frac{\sum^N_i{y_i(t)}}{N} 
+\]\\
+
+The overall performance measures both resource satisfaction and fairness of resource allocation.\\
 
 \section{Goals}
 The overall goal is to finish implementing Aridac, testing it under various kinds of workload scenarios, measuring how much improvement we achieve, and finally, analyzing the overhead brought by Aridac and discussing the trade-offs.\\
