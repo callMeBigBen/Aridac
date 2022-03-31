@@ -520,7 +520,7 @@ Using this performance metrics, we unify the resources requirements of container
 
 The overall performance measures both resource satisfaction and fairness of resource allocation.\\
 
-\section{Goals}
+\section{Re-iteration of Goals}
 The overall goal is to finish implementing Aridac, testing it under various kinds of workload scenarios, measuring how much improvement we achieve, and finally, analyzing the overhead brought by Aridac and discussing the trade-offs.\\
 
 To evaluate Aridac, we could start from the following perspectives:
@@ -547,8 +547,30 @@ For the 100\% completion goal, we will strive to finely tune the isolation polic
   \item Concrete benchmark data will be given, specifying by how much Aridac is leading in terms of system metrics.
 \end{itemize}
 
-Beyond the 100\% goal, if everything goes well, we will further develop a fuzzy disk I/O workload generator, so that all possible real-life cases will be covered, incluing assorted corner cases and rare cases. Our anticipation for this 125\% goal is that Aridac could survive through this fuzzy test. We will also carry out benchmarking, and do some statistical work to show how well Aridac could be in a totally random environment.
+Beyond the 100\% goal, if everything goes well, we will further develop a fuzzy disk I/O workload generator, so that all possible real-life cases will be covered, incluing assorted corner cases and rare cases. Our anticipation for this 125\% goal is that Aridac could survive through this fuzzy test. We will also carry out benchmarking, and do some statistical work to show how well Aridac could be in a totally random environment.\\
 
+So far, we've been striving to accomplish the 75\% goal (surely there is no way for us to bypass a 75\% goal and reach a 100\% directly). That being said, much effort has been put in the exploration of the feasibility and concrete logic of the implementation.\\
+
+There are several major issues concerning the implementation, which we must consider thoroughly in order to get the implementation delivered. In the following subsections we will discuss our progress on those issues accordingly.
+
+\subsection{Existing Isolation Techniques}
+It's unrealistic to implement disk I/O isolator from scratch within a limited time, which requires tons of OS domain knowledge. Luckily, the topic of resource isolation has been cahtching people's attention since a long time ago. Both the open source community and the academia achieved a lot so far. Specifically, linux kernel introduced cgroups (abbreviated from control groups) in its early versions, which serves as a feature that limits, accounts for, and isolates the resource usage (CPU, memory, disk I/O, network, etc.) of a collection of processes. And just a couple of years ago, the linux kernel upgrade the cgroups to v2 with a more refined management hierarchichy and other features. Further, it’s important to know that most high-level container runtimes (Containerd, Docker, Podman, and Kubernetes) are now capable of fully supporting cgroups v2.\\
+
+With cgroups, we can assign those processes that are running in containers into different resource groups and then adjust the resource quota of each group dynamically through the OS native cgroups operations.\\
+
+\subsection{Disk I/O Simulator}
+Another major challenge we have encountered during the exloration is how to correctly simulate the different levels of Disk I/O that satisfies what we need. Originally, our plan is to manually write program in C language that are directly built upon system calls like open(), read(), write(), and lseek(), etc. However, after several trials, we found it very difficult to achieve what we want. It's complex in that we need to know both the domain knowledge of those system calls and the machine's hardware metrics very well.\\
+
+To ease the burden, we investigated existing disk I/O generators, and we found FIO (Flexible IO) as a simple yet comprehensive I/O generator. And it satisfies all the demands that we have had so far. FIO can generate various kinds of I/O patterns, including IOPS intensive, throughput intensive, and latency intensive. It also provides both read and write generation. Overall we think it shall be very useful if we combine customized load generation logic with it.
+
+\subsection{System Observability}
+On thing to note here is: we need to monitor the hosted processes as the containers keep running, so that we can gather the machine-level metrics in order to adjust the isolation quota \& policy accordingly. There is a list of machine-level metrics we may need to care for every process, including the IOPS, throughput, and latency.\\
+
+So far, we use Atop as the tool to get the runtime machine metrics. We are still not 100\% sure if it can live up to our expectation, since our requirement may possibly change as our work progresses. We will keep the update posted in the section if anything changes.\\
+
+We experimented the above-mentioned existing techniques \& tools in practice, and it's proven to be a viable way to implement Aridac. We created our dev \& test environment on an Ubuntu 20.04 instance of Microsoft Azure cloud service, on which cgroup 2.0 has been adopted. We used FIO to generate several different levels of I/O workload as the test samples. We launched the workloads in containers and we observed the machine metrics through the Atop tool running on the host machine. \\
+
+As a next step, we will seek to automate the whole process by collecting the machine metrics through program, and calculate the system metrics dynamically. After having the system metrics component integrated into Aridac, we can then exploit cgroup technique to adjust the quota according the metrics we calculated.
 
 
 % conference papers do not normally have an appendix
@@ -577,6 +599,13 @@ Here are some questions that our experiments will answer:
 • What is the overall overhead of our approach? 
 
 
+\subsection{Further Schedule}
+By the date this interim report was written, we have made some achievement in the aspects that are mentioned in section 4.1-4.3. Below is a tentative schedule for the future work.\\
+
+\begin{itemize}
+  \item By 15th April, we plan to achieve the 75\% goal. We will finish the 3 essential components of Aridac, which are the load generation module, the runtime machine metrics monitor module, and the dynamic resource isolation module. And we will make sure that Aridac achieves a better performance in a several given typical tests.
+  \item By 30th April, we plan to achieve the 100\% goal, which seeks to build a comprehensive collection of typical workloads under containerized environment. And Aridac will excel in all of those tests, with concrete benchmark given in the report. 
+\end{itemize}
 
 
 
