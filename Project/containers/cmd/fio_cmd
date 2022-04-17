@@ -2,9 +2,9 @@
 apt-get update && apt-get install fio -y
 
 # Example 1: Random Write Test
-fio --name=randwrite --ioengine=libaio --iodepth=1 --rw=randwrite --bs=4k --direct=0 --size=10240M --numjobs=1 --runtime=36000 --group_reporting
+fio --name=randwrite --ioengine=libaio --iodepth=1 --rw=randwrite --bs=4k --direct=1 --size=256M --numjobs=1 --runtime=36000 --group_reporting
 
 
 # Example 2: Random Read Test
-fio --name=randread --ioengine=libaio --iodepth=16 --rw=randread --bs=4k --direct=0 --size=20480M --numjobs=1 --runtime=36000 --group_reporting
+fio --name=randread --ioengine=libaio --iodepth=16 --rw=randread --bs=4k --direct=1 --size=256M --numjobs=1 --runtime=36000 --group_reporting
 
