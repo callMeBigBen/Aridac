@@ -1,0 +1,6 @@
+# starting a docker container running ubuntu
+# also mounting the 'src' directory of host onto the 'target' directory of containr
+sudo docker run -it --mount src=`pwd`,target=/test_container,type=bind ubuntu bash
+
+# entering an existing container
+docker exec -it [container-id] bash

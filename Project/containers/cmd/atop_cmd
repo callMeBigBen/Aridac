@@ -1,0 +1,2 @@
+# to change the config of atop, edit the following batch file
+vim /usr/share/atop/atop.daily
