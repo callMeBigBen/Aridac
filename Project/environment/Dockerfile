@@ -10,6 +10,10 @@ RUN export http_proxy=http://proxy.pdl.cmu.edu:3128/ && export https_proxy=http:
 
 COPY fio_test.sh /
 
-RUN ./fio_test.sh
+COPY fio_read.sh /
+
+COPY fio_write.sh /
+
+# RUN ./fio_test.sh 
   
 CMD [“/bin/bash”]
