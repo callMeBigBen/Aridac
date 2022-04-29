@@ -13,4 +13,3 @@ COPY fio_test.sh /
 RUN ./fio_test.sh
   
 CMD [“/bin/bash”]
-
