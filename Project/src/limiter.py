@@ -46,14 +46,14 @@ def get_read(d):
     if len(container_dirs) == 0:
         print('no available container found!')
     for container_dir in container_dirs:
-        print('-------read limit of [%s]-------' % container_dir)
+        # print('-------read limit of [%s]-------' % container_dir)
         file_path = CONTAINER_BASE_DIR + container_dir + '/' + READ_SUFFIX
         file_content = subprocess.check_output('cat %s' % file_path, shell=True, text=True)
         if not file_content:
             return 0
 
         io_before = float(file_content.split()[1])
-        print("read: %fmb" % (io_before/1024/1024))
+        # print("read: %fmb" % (io_before/1024/1024))
         return io_before
 
 def set_write(d, new_threshold):

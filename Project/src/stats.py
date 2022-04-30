@@ -69,7 +69,7 @@ while True:
         if len(elements) < 10 :
             continue
         container_id = elements[0]
-        if container_id == "CONTAINER":
+        if container_id == "CONTAINER" or container_id == "--":
             continue
         if  elements[-4].endswith('kB'):
             elements[-4] = elements[-4][:len(elements[-4]) - 2]
@@ -125,7 +125,9 @@ while True:
             else:
                 new_ratio_i = cal_iratio(block_i, now - prev)
                 prev_time_map_i[container_id] = prev
-            if new_ratio_i > 0 and new_ratio_i <= 1:
+            if new_ratio_i == 0.0 and len(history_list) > 0:
+               history_list.append(history_list[-1])
+            elif new_ratio_i > 0 and new_ratio_i <= 1:
                 history_list.append(new_ratio_i)
             if len(history_list) > N:
                 history_list.pop(0)
@@ -142,7 +144,9 @@ while True:
             else:
                 new_ratio_o = cal_oratio(block_o, now - prev)
                 prev_time_map_o[container_id] = prev
-            if new_ratio_o > 0 and new_ratio_o <= 1:
+            if new_ratio_o == 0.0 and len(history_list) > 0:
+                history_list.append(history_list[-1])
+            elif new_ratio_o > 0 and new_ratio_o <= 1:
                 history_list.append(new_ratio_o)
             if len(history_list) > N:
                 history_list.pop(0)
