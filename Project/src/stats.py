@@ -69,7 +69,7 @@ while True:
         if len(elements) < 10 :
             continue
         container_id = elements[0]
-        if container_id == "CONTAINER":
+        if container_id == "CONTAINER" or container_id == "--":
             continue
         if  elements[-4].endswith('kB'):
             elements[-4] = elements[-4][:len(elements[-4]) - 2]
@@ -161,4 +161,4 @@ while True:
     tmp_lines = []
     
     # 7. pass the ratio map to policy
-    selector(name_to_ratio_i.keys(), name_to_ratio_i, name_to_ratio_o)
+    # selector(name_to_ratio_i.keys(), name_to_ratio_i, name_to_ratio_o)
