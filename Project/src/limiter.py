@@ -31,7 +31,7 @@ def get_write(d):
     if len(container_dirs) == 0:
         print('no available container found!')
     for container_dir in container_dirs:
-        print('-------container update for [%s]-------' % container_dir)
+        print('-------read limit of [%s]-------' % container_dir)
         file_path = CONTAINER_BASE_DIR + container_dir + '/' + WRITE_SUFFIX
         file_content = subprocess.check_output('cat %s' % file_path, shell=True, text=True)
         if not file_content:
@@ -46,7 +46,7 @@ def get_read(d):
     if len(container_dirs) == 0:
         print('no available container found!')
     for container_dir in container_dirs:
-        print('-------container update for [%s]-------' % container_dir)
+        print('-------read limit of [%s]-------' % container_dir)
         file_path = CONTAINER_BASE_DIR + container_dir + '/' + READ_SUFFIX
         file_content = subprocess.check_output('cat %s' % file_path, shell=True, text=True)
         if not file_content:
@@ -67,8 +67,8 @@ def set_write(d, new_threshold):
         file_content = subprocess.check_output('cat %s' % file_path, shell=True, text=True)
         disk = file_content.split()[0]
         io_before = float(file_content.split()[1])
-        os.system('echo \"%s %d\" > %s' % (disk, new_threshold*1024*1024, file_path))
-        print("write: %fmb -> %fmb" % (io_before/1024/1024, new_threshold))
+        os.system('echo \"%s %d\" > %s' % (disk, int(new_threshold), file_path))
+        print("write: %fmb -> %fmb" % (io_before/1024/1024, new_threshold/1024/1024))
 
 def set_read(d, new_threshold):
     container_dirs = get_containers_dirs(d)
@@ -81,8 +81,8 @@ def set_read(d, new_threshold):
         file_content = subprocess.check_output('cat %s' % file_path, shell=True, text=True)
         disk = file_content.split()[0]
         io_before = float(file_content.split()[1])
-        os.system('echo \"%s %d\" > %s' % (disk, new_threshold*1024*1024, file_path))
-        print("write: %fmb -> %fmb" % (io_before/1024/1024, new_threshold))
+        os.system('echo \"%s %d\" > %s' % (disk, int(new_threshold), file_path))
+        print("write: %fmb -> %fmb" % (io_before/1024/1024, new_threshold/1024/1024))
 
 
 
