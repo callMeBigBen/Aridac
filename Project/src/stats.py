@@ -165,4 +165,4 @@ while True:
     tmp_lines = []
     
     # 7. pass the ratio map to policy
-    # selector(name_to_ratio_i.keys(), name_to_ratio_i, name_to_ratio_o)
+    selector(name_to_ratio_i.keys(), name_to_ratio_i, name_to_ratio_o)

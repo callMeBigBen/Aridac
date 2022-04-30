@@ -2,7 +2,7 @@ from limiter import *
 
 ELASTIC = 0.2
 MAX_DISK_IPS = 2
-MAX_DISK_OPS = 1
+MAX_DISK_OPS = 0.8
 
 def selector(containers, name_to_ratio_i, name_to_ratio_o):
     desired_in = dict()
@@ -20,15 +20,15 @@ def selector(containers, name_to_ratio_i, name_to_ratio_o):
         idle_ips -= limit_in[c]
         idle_ops -= limit_out[c]
 
-        if len(name_to_ratio_i[c]) > 0:
+        if len(name_to_ratio_i[c]) > 3:
             desired_in[c] = MAX_DISK_IPS * pow(1024, 2) * sum(name_to_ratio_i[c])/len(name_to_ratio_i[c])
 
             if desired_in[c] * (1+ELASTIC) == limit_in[c]:
                 del desired_in[c]
 
-        if len(name_to_ratio_o[c]) > 0: 
+        if len(name_to_ratio_o[c]) > 3: 
             desired_out[c] = MAX_DISK_OPS * 1024 * 1024 * sum(name_to_ratio_o[c])/len(name_to_ratio_o[c])
-            print(desired_out[c], " ", limit_out[c])
+
             if desired_out[c] * (1+ELASTIC) == limit_out[c]:
                 del desired_out[c]
 
