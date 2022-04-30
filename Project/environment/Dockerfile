@@ -5,6 +5,7 @@ FROM ubuntu:latest
 # RUN apt-get update
 # RUN apt-get -y install fio wget 
 RUN export http_proxy=http://proxy.pdl.cmu.edu:3128/ && export https_proxy=http://proxy.pdl.cmu.edu:3128/ && apt-get update && apt-get install fio -y
+RUN export http_proxy=http://proxy.pdl.cmu.edu:3128/ && export https_proxy=http://proxy.pdl.cmu.edu:3128/ && apt-get update && apt-get install python3
 
 # RUN --mount=src=/mnt,target=/test_container,type=bind
 

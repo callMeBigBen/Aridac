@@ -34,9 +34,12 @@ def get_write(d):
         print('-------container update for [%s]-------' % container_dir)
         file_path = CONTAINER_BASE_DIR + container_dir + '/' + WRITE_SUFFIX
         file_content = subprocess.check_output('cat %s' % file_path, shell=True, text=True)
-        disk = file_content.split()[0]
+        if not file_content:
+            return 0
+            
         io_before = float(file_content.split()[1])
         print("write: %fmb" % (io_before/1024/1024))
+        return io_before
 
 def get_read(d):
     container_dirs = get_containers_dirs(d)
@@ -46,9 +49,12 @@ def get_read(d):
         print('-------container update for [%s]-------' % container_dir)
         file_path = CONTAINER_BASE_DIR + container_dir + '/' + READ_SUFFIX
         file_content = subprocess.check_output('cat %s' % file_path, shell=True, text=True)
-        disk = file_content.split()[0]
+        if not file_content:
+            return 0
+
         io_before = float(file_content.split()[1])
         print("read: %fmb" % (io_before/1024/1024))
+        return io_before
 
 def set_write(d, new_threshold):
     container_dirs = get_containers_dirs(d)
