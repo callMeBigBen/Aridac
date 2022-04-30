@@ -1,0 +1,1 @@
+sudo docker import ./fio_test_image.tar fio_test:v3
