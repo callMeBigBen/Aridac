@@ -1,5 +1,5 @@
 # expect to run with root priviledge
-
+from policy import *
 from os import preadv
 import time
 import subprocess
@@ -11,10 +11,6 @@ N = int(sys.argv[1])
 
 def current_milli_time():
     return float(round(time.time() * 1000))
-
-# 1. probe the maximum throughput for DISK I and O (MB/s)
-MAX_DISK_IPS = 2
-MAX_DISK_OPS = 1
 
 def cal_iratio(thruput_delta, time_delta):
     return (thruput_delta* (1000.0/time_delta)) / float(MAX_DISK_IPS)
@@ -165,4 +161,4 @@ while True:
     tmp_lines = []
     
     # 7. pass the ratio map to policy
-    # policy.selector(containers, name_to_ratio_i, name_to_ratio_o)
+    selector(name_to_ratio_i.keys(), name_to_ratio_i, name_to_ratio_o)

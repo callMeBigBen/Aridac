@@ -1,8 +1,9 @@
-from Aridac.Project.src.stats import MAX_DISK_OPS
 from limiter import *
-from stats import *
 
 ELASTIC = 0.2
+# 1. probe the maximum throughput for DISK I and O (MB/s)
+MAX_DISK_IPS = 2
+MAX_DISK_OPS = 1
 
 def selector(containers, name_to_ratio_i, name_to_ratio_o):
     desired_in = dict()
@@ -51,17 +52,3 @@ def selector(containers, name_to_ratio_i, name_to_ratio_o):
         else:
             print("No idle bandwidth for Disk Output...")
         set_write(c, limit_out[c])
-
-
-if __name__ == '__main__':
-    
-
-
-
-
-
-
-    
-    
-
-
