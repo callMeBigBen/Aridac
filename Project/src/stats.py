@@ -5,6 +5,9 @@ import time
 import subprocess
 import atexit
 import time
+import sys
+
+N = int(sys.argv[1])
 
 def current_milli_time():
     return float(round(time.time() * 1000))
@@ -42,8 +45,6 @@ name_to_ratio_o = {}
 cur_line = 0
 cur_containers = 0
 tmp_lines = []
-# prev_changed_map_i = {}
-# prev_changed_map_o = {}
 prev_time_map_i = {}
 prev_time_map_o = {}
 
@@ -90,10 +91,6 @@ while True:
         except ValueError:
             continue
         
-
-        # if  elements[-2].endswith('B'):
-        #     elements[-2] = elements[-2][:len(elements[-2]) - 2]
-        #     elements[-2] = float(elements[-2]) / 1024.0
         if  elements[-2].endswith('kB'):
             elements[-2] = elements[-2][:len(elements[-2]) - 2]
             elements[-2] = float(elements[-2]) / 1024.0
@@ -134,7 +131,7 @@ while True:
                 prev_time_map_i[container_id] = prev
             if new_ratio_i > 0 and new_ratio_i <= 1:
                 history_list.append(new_ratio_i)
-            if len(history_list) > 50:
+            if len(history_list) > N:
                 history_list.pop(0)
         else:
             name_to_ratio_i[container_id] = []
@@ -151,7 +148,7 @@ while True:
                 prev_time_map_o[container_id] = prev
             if new_ratio_o > 0 and new_ratio_o <= 1:
                 history_list.append(new_ratio_o)
-            if len(history_list) > 50:
+            if len(history_list) > N:
                 history_list.pop(0)
         else:
             name_to_ratio_o[container_id] = []
@@ -166,5 +163,6 @@ while True:
     print(name_to_ratio_i)
     print(name_to_ratio_o)
     tmp_lines = []
+    
     # 7. pass the ratio map to policy
     # policy.selector(containers, name_to_ratio_i, name_to_ratio_o)
