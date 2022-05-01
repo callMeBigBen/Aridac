@@ -87,6 +87,7 @@ def set_read(d, new_threshold):
 
 
 if __name__ == '__main__':
+    # parameter parser
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', type=str, required=True, help='select container, fill in the prefix. Use "all" to adjust all containers\' quota')
     parser.add_argument('-t', type=str, required=True, help='s: Set new threshold, g: Get current threshold.')

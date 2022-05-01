@@ -41,11 +41,12 @@ def selector(containers, name_to_ratio_i, name_to_ratio_o):
             old_limit = limit_in[c]
             limit_in[c] = min(desired_in[c] * (1+ELASTIC), desired_in[c] + idle_ips)
             idle_ips -= (limit_in[c] - old_limit)
-        elif desired_in[c] * (1+ELASTIC) < limit_in[c]:
+        elif desired_in[c] * (1+ELASTIC) < limit_in[c] * (1-ELASTIC):
             idle_ips += (limit_in[c] - desired_in[c] * (1+ELASTIC))
             limit_in[c] = desired_in[c] * (1+ELASTIC)
-        else:
+        elif idle_ops <= 0:
             print("No idle bandwidth for Disk Input...")
+            continue
         set_read(c, limit_in[c])
             
     for c, desire in desired_out.items():
@@ -53,11 +54,12 @@ def selector(containers, name_to_ratio_i, name_to_ratio_o):
             old_limit = limit_out[c]
             limit_out[c] = min(desired_out[c] * (1+ELASTIC), desired_out[c] + idle_ops)
             idle_ops -= (limit_out[c] - old_limit)
-        elif desired_out[c] * (1+ELASTIC) < limit_out[c]:
+        elif desired_out[c] * (1+ELASTIC) < limit_out[c] * (1-ELASTIC):
             idle_ops += (limit_out[c] - desired_out[c] * (1+ELASTIC))
             limit_out[c] = desired_out[c] * (1+ELASTIC)
-        else:
+        elif idle_ops <= 0:
             print("No idle bandwidth for Disk Output...")
+            continue
         set_write(c, limit_out[c])
 
 
