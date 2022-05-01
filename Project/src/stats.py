@@ -26,6 +26,7 @@ subprocess.Popen(["rm","docker_stats"])
 time.sleep(0.5)
 stats_log_w = open('docker_stats', 'a+')
 server = subprocess.Popen(["docker","stats"], stdout=stats_log_w)
+csvfile = open('aaaaa.csv', 'a', newline='')
 
 
 # 3. make sure to kill the child process when the main program exits
@@ -53,7 +54,7 @@ while True:
     prev = current_milli_time()
     # 5. read the docker stats output every given interval
     while not stats_log_r.readline():
-        time.sleep(0.1)
+        time.sleep(0.05)
     # each loop is new round of output
     now = current_milli_time()
     container_ids.clear()
@@ -141,6 +142,7 @@ while True:
             new_ratio_i = cal_iratio(block_i, now - prev)
             if new_ratio_i > 0 and new_ratio_i <= 1:
                 name_to_ratio_i[container_id].append(new_ratio_i)
+
         # process disk output
         if container_id in name_to_ratio_o:
             history_list = name_to_ratio_o[container_id]
@@ -178,11 +180,10 @@ while True:
     
     # 7. pass the ratio map to policy
     selector(name_to_ratio_i.keys(), name_to_ratio_i, name_to_ratio_o)
-    with open('util_repeating.csv', 'a', newline='') as csvfile:
-        spamwriter = csv.writer(csvfile, delimiter=',',
-                            quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        for c in name_to_ratio_i.keys():
-            spamwriter.writerow([str(current_milli_time())]+ [c] +
-                [str(1024 * sum(name_to_ratio_o[c])/max(len(name_to_ratio_o[c]), 1))])
+    spamwriter = csv.writer(csvfile, delimiter=',',
+                        quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    for c in name_to_ratio_i.keys():
+        spamwriter.writerow([str(current_milli_time())]+ [c] +
+            [str(name_to_ratio_o[c])])
 
         
