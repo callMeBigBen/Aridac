@@ -2,9 +2,9 @@ from limiter import *
 from datetime import datetime
 import csv
 
-ELASTIC = 0.2
+ELASTIC = 0.4
 MAX_DISK_IPS = 2
-MAX_DISK_OPS = 45
+MAX_DISK_OPS = 1
 
 def selector(containers, name_to_ratio_i, name_to_ratio_o):
     desired_in = dict()
@@ -51,6 +51,10 @@ def selector(containers, name_to_ratio_i, name_to_ratio_o):
             limit_in[c] = desired_in[c] * (1+ELASTIC)
         elif idle_ops <= 0:
             print("No idle bandwidth for Disk Input...")
+            if desired_in[c] * (1+ELASTIC) < limit_in[c] * (1 - pow(ELASTIC, 2)):
+                idle_ips += (limit_in[c] - desired_in[c] * (1+ELASTIC))
+                limit_in[c] = desired_in[c] * (1+ELASTIC)
+                set_read(c, limit_in[c])
             continue
         set_read(c, limit_in[c])
             
@@ -64,14 +68,18 @@ def selector(containers, name_to_ratio_i, name_to_ratio_o):
             limit_out[c] = desired_out[c] * (1+ELASTIC)
         elif idle_ops <= 0:
             print("No idle bandwidth for Disk Output...")
+            if desired_out[c] * (1+ELASTIC) < limit_out[c] * (1 - pow(ELASTIC, 2)):
+                idle_ops += (limit_out[c] - desired_out[c] * (1+ELASTIC))
+                limit_out[c] = desired_out[c] * (1+ELASTIC)
+                set_write(c, limit_out[c])
             continue
         set_write(c, limit_out[c])
 
-    with open('eggs.csv', 'a', newline='') as csvfile:
+    with open('limit_repeating.csv', 'a', newline='') as csvfile:
         spamwriter = csv.writer(csvfile, delimiter=' ',
                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
         for c in containers:
-            spamwriter.writerow([str(current_time)]+ [c] +[str(limit_in[c]/pow(1024, 2))] + [str(limit_out[c]/pow(1024, 2))])
+            spamwriter.writerow([str(current_time)]+ [c] +[str(limit_in[c]/1024)] + [str(limit_out[c]/1024)])
 
         
 
