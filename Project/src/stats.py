@@ -6,6 +6,7 @@ import subprocess
 import atexit
 import time
 import sys
+import copy
 
 N = int(sys.argv[1])
 
@@ -43,6 +44,7 @@ cur_containers = 0
 tmp_lines = []
 prev_time_map_i = {}
 prev_time_map_o = {}
+container_ids = set()
 
 stats_log_r = open('docker_stats', 'a+')
 time.sleep(1)
@@ -53,6 +55,7 @@ while True:
         time.sleep(0.1)
     # each loop is new round of output
     now = current_milli_time()
+    container_ids.clear()
     while True:
         line = stats_log_r.readline()
         if not line:
@@ -102,6 +105,7 @@ while True:
             acc_block_o = float(elements[-2])
         except ValueError:
             continue
+        container_ids.add(container_id)
 
         if container_id in prev_name_to_i:
             prev_acc_block_i = prev_name_to_i[container_id]
@@ -160,9 +164,16 @@ while True:
         if block_i > 0.0:
             prev_time_map_i[container_id] = now
 
+    to_be_delete = []
+    for k in name_to_ratio_i.keys():
+        if k not in container_ids:
+            to_be_delete.append(k)
+    for k in to_be_delete:
+        del name_to_ratio_i[k]
+        del name_to_ratio_o[k]
     print(name_to_ratio_i)
     print(name_to_ratio_o)
     tmp_lines = []
     
     # 7. pass the ratio map to policy
-    selector(name_to_ratio_i.keys(), name_to_ratio_i, name_to_ratio_o)
+    # selector(name_to_ratio_i.keys(), name_to_ratio_i, name_to_ratio_o)
