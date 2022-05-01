@@ -177,12 +177,12 @@ while True:
     tmp_lines = []
     
     # 7. pass the ratio map to policy
-    selector(name_to_ratio_i.keys(), name_to_ratio_i, name_to_ratio_o)
+    # selector(name_to_ratio_i.keys(), name_to_ratio_i, name_to_ratio_o)
     with open('ulti.csv', 'a', newline='') as csvfile:
         spamwriter = csv.writer(csvfile, delimiter=',',
                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
         for c in name_to_ratio_i.keys():
             spamwriter.writerow([str(current_milli_time())]+ [c] +
-                [str(name_to_ratio_i[c])] + [str(name_to_ratio_o[c])])
+                [str(name_to_ratio_o[c])])
 
         
