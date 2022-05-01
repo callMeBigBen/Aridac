@@ -1,4 +1,6 @@
 from limiter import *
+from datetime import datetime
+import csv
 
 ELASTIC = 0.2
 MAX_DISK_IPS = 2
@@ -9,6 +11,9 @@ def selector(containers, name_to_ratio_i, name_to_ratio_o):
     desired_out = dict()
     limit_in = dict()
     limit_out = dict()
+
+    now = datetime.now()
+    current_time = now.strftime("%H:%M:%S")
 
     idle_ips = MAX_DISK_IPS * pow(1024, 2)
     idle_ops = MAX_DISK_OPS * pow(1024, 2)
@@ -61,6 +66,15 @@ def selector(containers, name_to_ratio_i, name_to_ratio_o):
             print("No idle bandwidth for Disk Output...")
             continue
         set_write(c, limit_out[c])
+
+    with open('eggs.csv', 'a', newline='') as csvfile:
+        spamwriter = csv.writer(csvfile, delimiter=' ',
+                            quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        for c in containers:
+            spamwriter.writerow([str(current_time)]+ [c] +[str(limit_in[c]/pow(1024, 2))] + [str(limit_out[c]/pow(1024, 2))])
+
+        
+
 
 
 
