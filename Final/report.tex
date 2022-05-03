@@ -283,7 +283,7 @@
 % not capitalized unless they are the first or last word of the title.
 % Linebreaks \\ can be used within to get better formatting as desired.
 % Do not put math or special symbols in the title.
-\title{Aridac: Adaptive Resource Isolation of Non-volatile Devices \\Under Heterogeneous Containerized Environment \\ Project Interim Report}
+\title{Aridac: Adaptive Resource Isolation of Non-volatile Devices \\Under Heterogeneous Containerized Environment \\ Project Final Report}
 
 
 % author names and affiliations
@@ -383,9 +383,13 @@ We plan to propose the Aridac, an Adaptive Resource Isolation algorithm of Non-v
 The rest of the proposal is organized as follows: Related Work section shows the relevant works of disk I/O isolation; Methodology section shows how we will define the effectiveness of Aridac; Goals includes our promising results of research; Final paper plan illustrates how we will write the final paper. \\
 
 \section{Related Works}
-Currently, there are not so many efforts on research of container isolation, especially on disk I/O. However, some researchers interested in disk I/O isolation has some works for us to refer. Merchant et al. \cite{Merchant2011MaestroQI} focused on the fairness and performance of disk I/O allocation for different applications. He hypothesized there are different performance targets (throughput or I/O directed) for each application, and developed a policy to allocate the resources to them to reach the best overall performance. Arunagiri et al.\cite{Arunagiri2011FAIRIOAA} developed the FAIRIO algorithm to schedule prorated I/O resources for fair allocation, which is a more general solution. Li et al.\cite{Li2015ASCARAC} provided an automatic framework to monitor storage contention and optimize bandwidth utilization. In addtion, for the different scenario on solid state disks, Jo et al.\cite{Jo2017DynamicLB} discussed the specific solution to it.\\
+Currently, there are not so many efforts on research of container isolation, especially on disk I/O. However, some researchers interested in disk I/O isolation has some works for us to refer. Merchant et al. \cite{Merchant2011MaestroQI} proposed Maestro, focused on the fairness and performance of disk I/O allocation for different applications. He hypothesized there are different performance targets (throughput or I/O directed) for each application, and developed a policy to allocate the resources to them to reach the best overall performance. Arunagiri et al.\cite{Arunagiri2011FAIRIOAA} developed the FAIRIO algorithm to schedule prorated I/O resources for fair allocation, which is a more general solution. Li et al.\cite{Li2015ASCARAC} provided an automatic framework to monitor storage contention and optimize bandwidth utilization. In addtion, for the different scenario on solid state disks, Jo et al.\cite{Jo2017DynamicLB} proposed a I/O load balancer for it. \\
 
-The above ideas give us a good inspiration for container disk I/O isolation. A naive idea is to treat containers as applications and apply the above solutions. However, different from applications, containers' behaviors are more complicated. In this paper, we believe each container has a dynamic usage pattern and is variable from period to period. Therefore, adjusting the policy to allocate resources cannot be avoided.\\
+The above ideas give us a good inspiration for container disk I/O isolation. However, those works are not strongly related to our topic. Take Maestro as an instance, it focuses on application I/O balancing on large disk arrays, so its algorithm takes disk I/O ports and preset application targats in consideration with optimization function, which is not aligned with our topic.\\
+
+A naive idea is to treat containers as applications and apply the above solutions. However, different from applications, containers' behaviors are more complicated. In this paper, we believe each container has a dynamic usage pattern and is variable from period to period. Therefore, adjusting the policy to allocate resources cannot be avoided.\\
+
+As for resource isolation tools, Linux control group (cgroup) is the original resource isolation tools, and docker's isolation capacity is built on this. We can easily find the corresonding cgroup of each docker container to limit there resource usage.\\
 
 
 % An example of a floating figure using the graphicx package.
@@ -570,7 +574,22 @@ So far, we use Atop as the tool to get the runtime machine metrics. We are still
 
 We experimented the above-mentioned existing techniques \& tools in practice, and it's proven to be a viable way to implement Aridac. We created our dev \& test environment on an Ubuntu 20.04 instance of Microsoft Azure cloud service, on which cgroup 2.0 has been adopted. We used FIO to generate several different levels of I/O workload as the test samples. We launched the workloads in containers and we observed the machine metrics through the Atop tool running on the host machine. \\
 
-As a next step, we will seek to automate the whole process by collecting the machine metrics through program, and calculate the system metrics dynamically. After having the system metrics component integrated into Aridac, we can then exploit cgroup technique to adjust the quota according the metrics we calculated.
+As a next step, we will seek to automate the whole process by collecting the machine metrics through program, and calculate the system metrics dynamically. After having the system metrics component integrated into Aridac, we can then exploit cgroup technique to adjust the quota according the metrics we calculated.\\
+
+
+\section{Evaluation}
+
+In this section, we aim to prove two major things. First, the scenario of resource preemption exist; second, to test if our policy is able to prevent the resource preemption.
+and the quota limit can adapt the dynamic desire of application (e.g. increase or decrease).
+
+\subsection{Workload Design}
+
+\begin{itemize}
+  \item \textbf{Workload 1} Two containers A and B running with same rate (200KiB/s) in the beginning. At some point, B's I/O usage goes high without limit (2MiB/s), preempting A's resource.
+  \item \textbf{Workload 2} Two containers A and B running with same rate (200KiB/s) in the beginning. At some point, B's I/O usage goes high without limit (2MiB/s), preempting A's resource. After a while, B's usage goes back to normal rate (200KiB/s).
+\end{itemize}
+
+Our policy should prevent the above resource preemption. Also, the quota allocated by our policy should keep align with the containers' desire dynamically. The only difference between two workloads is that, in workload 2, B's usage goes back to its normal rate, where our policy should be able to adjust the quota low. \\
 
 
 % conference papers do not normally have an appendix
