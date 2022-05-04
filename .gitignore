@@ -42,3 +42,10 @@ IEEEtran*
 IEEEtran/**
 
 docker_stats
+
+*.aux
+*.log
+*.synctex.gz
+*.blg
+*.bbl
+*.pdf
