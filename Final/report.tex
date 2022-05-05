@@ -123,7 +123,7 @@ Although there are already some tools (cgroup, trickle) for adjusting resource q
 
 We plan to propose the Aridac, an Adaptive Resource Isolation algorithm of Non-volatile Devices under the heterogeneous containerized environment. The basic idea is to monitor, collect and analyze the resource usage habit of containers as time goes on, and allocate their resources to ensure fairness and preemption avoidance under certain rules. The quota of disk I/O can be allocated by, for instance, the priority of the application, or by containers' history maximum usage. And the objective is to achieve fairness. Besides the algorithm, we plan to design the testing workloads and design experiments for comparing fairness between different policies with specific metrics. Also, we will provide the corresponding benchmark data for further research. To narrow down the scope, we focus on disk isolation, which can be extended to the network I/O or other resource allocation scenarios. The basic tools of system design and experiments include cgroup, bash scripts.\\
 
-The rest of the proposal is organized as follows: the Related Work section shows the relevant works of disk I/O isolation; the Methodology section shows how we analyze the problem and define the basic approach to achieve adaptive quota calculation; Design & Implementation section includes the system design and engineering implementation of Aridac; the Evaluation section includes Workload Design and Experiment, which we used specific Disk I/O workloads to reproduce the preemption and overload situation, and test whether Aridac could achieve our targeted performance; in the Future Work section, we will discuss few potential improvements on our current approach; in the Problems & Lessons Learned section we will list few roadblocks we met during the project along with our thinking; in the last section of Conclusion, we will summarize the entire project. \\
+The rest of the proposal is organized as follows: the Related Work section shows the relevant works of disk I/O isolation; the Methodology section shows how we analyze the problem and define the basic approach to achieve adaptive quota calculation; Design \& Implementation section includes the system design and engineering implementation of Aridac; the Evaluation section includes Workload Design and Experiment, which we used specific Disk I/O workloads to reproduce the preemption and overload situation, and test whether Aridac could achieve our targeted performance; in the Future Work section, we will discuss few potential improvements on our current approach; in the Problems \& Lessons Learned section we will list few roadblocks we met during the project along with our thinking; in the last section of Conclusion, we will summarize the entire project. \\
 
 
 \section{Related Works}
@@ -217,7 +217,7 @@ Figure 4 demonstrated the situation of workload 1 running without any resource l
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.5\textwidth]{images/workload1_2.png}
+\includegraphics[width=0.5\textwidth]{./images/workload1_2.png}
 \caption{Workload 1 Running Wit Aridac}
 \end{figure}
 
