@@ -218,7 +218,7 @@ Figure 4 demonstrated the situation of workload 1 running without any resource l
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.5\textwidth]{./images/workload1_2.png}
-\caption{Workload 1 Running Wit Aridac}
+\caption{Workload 1 Running With Aridac}
 \end{figure}
 
 
@@ -236,7 +236,7 @@ Figure 6 demonstrated the situation of workload 2 running without any resource l
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.5\textwidth]{images/workload2_2.png}
-\caption{Workload 2 Running Wit Aridac}
+\caption{Workload 2 Running With Aridac}
 \end{figure}
 
 Figure 7 demonstrated the situation of workload 2 running with our Aridac Adaptive policy, the figure is measured by the overall disk bandwidth utility for each container over time. Similar to the previous figures, in the beginning, both two containers are generating disk IO at a stable rate of about 200 KB per second. After about the 15th second of launching the workload, the burst container starts to generate a large amount of disk IO, but the preemption is avoided with Aridac. The actual disk IO utility rate of the victim container consistently stayed at its desired rate to maintain its lifeline, while the burst container gained idle bandwidth exponentially. Aridac only responds quickly to the burst container, and it only takes about 10 seconds to allocate all idle bandwidth to the burst container step by step. While the burst workload finished and returned to the stable rate at the 80th second, Aridac was able to reclaim the bandwidth previously allocated to the burst container based on the change in disk IO rate is observed. During the entire process, the victim container remains healthy and is able to provide stable services, and all the idle resources are well managed based on the on-demand policy.\\
