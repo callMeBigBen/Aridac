@@ -10,6 +10,8 @@ READ_SUFFIX = 'blkio.throttle.read_bps_device'
 WRITE_SUFFIX = 'blkio.throttle.write_bps_device'
 
 # Find all match containers by prefix
+
+
 def get_containers_dirs(d):
     # d == 'all' or <container-id-prefix>
     files = os.listdir(CONTAINER_BASE_DIR)
@@ -24,6 +26,8 @@ def get_containers_dirs(d):
     return match_dirs
 
 # Get current disk Output Quota
+
+
 def get_write(d):
     container_dirs = get_containers_dirs(d)
     if len(container_dirs) == 0:
@@ -41,6 +45,8 @@ def get_write(d):
         return io_before
 
 # Get current disk Input Quota
+
+
 def get_read(d):
     container_dirs = get_containers_dirs(d)
     if len(container_dirs) == 0:
@@ -58,6 +64,8 @@ def get_read(d):
         return io_before
 
 # Update disk Output Quota
+
+
 def set_write(d, new_threshold):
     container_dirs = get_containers_dirs(d)
     if len(container_dirs) == 0:
@@ -76,6 +84,8 @@ def set_write(d, new_threshold):
               (io_before/1024/1024, new_threshold/1024/1024))
 
 # Update  disk Input Quota
+
+
 def set_read(d, new_threshold):
     container_dirs = get_containers_dirs(d)
     if len(container_dirs) == 0:
@@ -92,6 +102,7 @@ def set_read(d, new_threshold):
                   (disk, int(new_threshold), file_path))
         print("write: %fmb -> %fmb" %
               (io_before/1024/1024, new_threshold/1024/1024))
+
 
 # main method provide cmdline usage, use "python3 limiter --help" for more detail
 if __name__ == '__main__':
