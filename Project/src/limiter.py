@@ -1,3 +1,4 @@
+# this file provide functions to read and modify cgroup config for containers
 from encodings import search_function
 import os
 import sys
@@ -8,7 +9,7 @@ CONTAINER_BASE_DIR = '/sys/fs/cgroup/blkio/docker/'
 READ_SUFFIX = 'blkio.throttle.read_bps_device'
 WRITE_SUFFIX = 'blkio.throttle.write_bps_device'
 
-
+# Find all match containers by prefix
 def get_containers_dirs(d):
     # d == 'all' or <container-id-prefix>
     files = os.listdir(CONTAINER_BASE_DIR)
@@ -22,12 +23,7 @@ def get_containers_dirs(d):
         match_dirs = [f for f in files if f.startswith(d)]
     return match_dirs
 
-
-def get_quota(dir):
-    path = CONTAINER_BASE_DIR + dir
-    print(path)
-
-
+# Get current disk Output Quota
 def get_write(d):
     container_dirs = get_containers_dirs(d)
     if len(container_dirs) == 0:
@@ -44,7 +40,7 @@ def get_write(d):
         print("write: %fmb" % (io_before/1024/1024))
         return io_before
 
-
+# Get current disk Input Quota
 def get_read(d):
     container_dirs = get_containers_dirs(d)
     if len(container_dirs) == 0:
@@ -61,7 +57,7 @@ def get_read(d):
         # print("read: %fmb" % (io_before/1024/1024))
         return io_before
 
-
+# Update disk Output Quota
 def set_write(d, new_threshold):
     container_dirs = get_containers_dirs(d)
     if len(container_dirs) == 0:
@@ -79,7 +75,7 @@ def set_write(d, new_threshold):
         print("write: %fmb -> %fmb" %
               (io_before/1024/1024, new_threshold/1024/1024))
 
-
+# Update  disk Input Quota
 def set_read(d, new_threshold):
     container_dirs = get_containers_dirs(d)
     if len(container_dirs) == 0:
@@ -97,7 +93,7 @@ def set_read(d, new_threshold):
         print("write: %fmb -> %fmb" %
               (io_before/1024/1024, new_threshold/1024/1024))
 
-
+# main method provide cmdline usage, use "python3 limiter --help" for more detail
 if __name__ == '__main__':
     # parameter parser
     parser = argparse.ArgumentParser()

@@ -27,7 +27,7 @@ subprocess.Popen(["rm","docker_stats"])
 time.sleep(0.5)
 stats_log_w = open('docker_stats', 'a+')
 server = subprocess.Popen(["docker","stats"], stdout=stats_log_w)
-csvfile = open('aaaaa.csv', 'a', newline='')
+csvfile = open('repeating_util.csv', 'a', newline='')
 
 
 # 3. make sure to kill the child process when the main program exits
@@ -185,6 +185,7 @@ while True:
                         quotechar='|', quoting=csv.QUOTE_MINIMAL)
     for c in name_to_ratio_i.keys():
         spamwriter.writerow([str(current_milli_time())]+ [c] +
-            [str(name_to_ratio_o[c])])
+                           [str(1024 * sum(name_to_ratio_o[c])/max(len(name_to_ratio_o[c]), 1))])
+
 
         

@@ -1,3 +1,5 @@
+# This is a python file that generate fixed amount of disk IO in each second
+
 #!/usr/bin/python
 import random
 import string
