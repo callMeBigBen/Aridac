@@ -631,6 +631,18 @@ Our policy should prevent the above resource preemption. Also, the quota allocat
 
 % conference papers do not normally have an appendix
 
+\section{Conclusion}
+We conducted a thorough investigation about the problems existed for disk contention under modern containerized environment. We found out that the disk resource isolation level among containers is not good enough to ensure a consisten behavior pattern and perfornmance of the whole system. On a shared physical node where multiple containers are running stably, disk contention \& preemption may occur due to unexpected events.\\
+
+We further did our literature review in search of disk utilization quota control relevant topics. And the work we found served as good insights, but cannot be directly applied to our problem because of the difference in domain. \\
+
+We figured out the historic disk utilization statistics may be useful in predicting the incoming short-term disk utilization. And we followed this hypothesis and implemented Aridac, with a pipelined system architecture which includes 3 phases namely StatsCollector, PolicySelector, and Limiter. We futher show that Aridac achieved the desired adaptive disk resource isolation capability under the simulated environment with several carefully-designed workloads.\\
+
+To conclude, with Aridac, we are able to adjust the resource cap for each container adaptively, so that programs in the guest containers could maintain a consistent performence throughout their lifetime.
+
+\section{Problems Encountered}
+We encountered many troubles throughout the whole journey. For example, we were disturbed by not being able to reproduce the case where a container with high disk I/O could preempt the disk share of the other container. Also, at the beginning stage of the evaluation, we planned to use Death Star microservice benchmark as the testbed. But later we found that the launching of Death Start will cause a lot of dependency issues and mess up the test environment. And the other time-consuming task is to find the suitable disk I/O generator. We tried different kinds of approach, from self-improvised C program, to the dd shell command, and finally the fio. And the usage of fio is a bit complex, with a lot of available arguments and options. Fortunately the documentation is very helpful, and we were able to find everything we want from it.\\
+
 \section{Future Work}
 
 % In our final paper, we will first introduce the resource isolation problem of the container environment and discuss the background and related work. Next, we will briefly outline the system design and implementation of Aridac. Last, we will describe our experimental setup, including what machines and environments were used, what workload we developed to test our implementation. The most crucial part of the paper will be concerned with describing and evaluating our methods for container resource isolation. We will provide performance analyses, and conclude with a discussion about potential optimization schemes, and if possible, a set of benchmarks for more detailed performance evaluation.\\
@@ -655,16 +667,12 @@ Our policy should prevent the above resource preemption. Also, the quota allocat
 
 % • What is the overall overhead of our approach? 
 
-
-\section{Conclusion}
 % By the date this interim report was written, we have made some achievement in the aspects that are mentioned in section 4.1-4.3. Below is a tentative schedule for the future work.\\
 
 % \begin{itemize}
 %   \item By 15th April, we plan to achieve the 75\% goal. We will finish the 3 essential components of Aridac, which are the load generation module, the runtime machine metrics monitor module, and the dynamic resource isolation module. And we will make sure that Aridac achieves a better performance in a several given typical tests.
 %   \item By 30th April, we plan to achieve the 100\% goal, which seeks to build a comprehensive collection of typical workloads under containerized environment. And Aridac will excel in all of those tests, with concrete benchmark given in the report. 
 % \end{itemize}
-
-\section{Problems \& Lessons Learned}
 
 
 
