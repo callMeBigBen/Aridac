@@ -583,9 +583,22 @@ As for resource isolation tools, Linux control group (cgroup) is the original re
 % As a next step, we will seek to automate the whole process by collecting the machine metrics through program, and calculate the system metrics dynamically. After having the system metrics component integrated into Aridac, we can then exploit cgroup technique to adjust the quota according the metrics we calculated.\\
 
 \section{Methodology}
+\begin{figure}
+  \centering
+    \includegraphics[width=\linewidth]{resources/desired.pdf}
+    \caption{desired disk I/O util pattern}
+    \label{fig:desired}
+  \end{figure}
+
+  \begin{figure}
+    \centering
+      \includegraphics[width=\linewidth]{resources/undesired.pdf}
+      \caption{undesired disk I/O util pattern}
+      \label{fig:undesired}
+    \end{figure}
 Can we also take the approach that set a target disk throughput for containers, just as what was done to applications in Maestro? Unfortunately, we can not do the same things with containers, since applications running inside the containers are completely transparent to us. We are not able to know their feature, types, and behavior. We can't even know how many applications would be running in a single container, and how is the target going to fluctuate as the number of containers changes.\\
 
-However, there are still some intuitions that might help with the problem: can we predict the immediately coming disk utilization of a container based on its disk utilization data points in the past period? After a thorough retrospect of the experiences we had with cloud services, we think the answer is yes. In industry, the containers that share a single host machine with others are not supposed to have an unstable and harsh disk utilization  pattern. As time goes on, their utilization curves should either remain inside a very stable range, or show some fluctuation at a general low usage level. [todo: insert graph] Only under this assumption, these containers can coexist on a single node. For those containers whose guest applications have demanding requirement for disk, such as frequent bursty I/O and high disk utilization, we assert that it's better not to deploy them on a shared machine with any other containers, since it won't be fair for other stake holders. \\
+However, there are still some intuitions that might help with the problem: can we predict the immediately coming disk utilization of a container based on its disk utilization data points in the past period? After a thorough retrospect of the experiences we had with cloud services, we think the answer is yes. In industry, the containers that share a single host machine with others are not supposed to have an unstable and harsh disk utilization pattern. As time goes on, their utilization curves should either remain inside a very stable range, or show some fluctuation at a general low usage level \ref*{fig:desired}. Only under this assumption, these containers can coexist on a single node. For those containers whose guest applications have demanding requirement for disk, such as frequent bursty I/O and high disk utilization \ref*{fig:undesired}, we assert that it's better not to deploy them on a shared machine with any other containers, since it won't be fair for other stake holders. \\
 
 We introduce 2 notion here. The first one is \textbf{lifeline}. If a container shows a stable disk utilization in the past time period, it’s very likely that it needs at least this amount of utilization in order to serve its duty faithfully. We refer this amount of utilization as the lifeline of the container. The second one is abruption. If a container is showing a burst in its I/O utilization, it's very likely due to some abnormal/malicious events. e.g., image downloading, DoS attack. We refer this kind of traffic pattern as abruption. To summarize, we hold the view that lifeline deserves higher priority than abruption! \\
 

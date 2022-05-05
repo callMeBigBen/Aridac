@@ -48,5 +48,4 @@ docker_stats
 *.synctex.gz
 *.blg
 *.bbl
-*.pdf
 .Ds_store

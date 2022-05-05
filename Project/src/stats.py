@@ -9,6 +9,7 @@ import sys
 import csv
 import copy
 
+# the size of the bounded queue for storing the history utilization
 N = int(sys.argv[1])
 
 def current_milli_time():
