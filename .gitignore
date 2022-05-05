@@ -49,3 +49,4 @@ docker_stats
 *.blg
 *.bbl
 *.pdf
+.Ds_store
